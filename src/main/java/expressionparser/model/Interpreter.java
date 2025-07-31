@@ -2,7 +2,7 @@ package expressionparser.model;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+import java.util.Objects;
 
 public class Interpreter {
     private final Map<String, Float> variables;
@@ -27,7 +27,7 @@ public class Interpreter {
     private Result handleAssignment(Assignment assignment) {
         float value = assignment.expression().eval(variables);
         variables.put(assignment.variable(), value);
-        return Result.success(assignment.variable() + " = " + value);
+        return Result.success(assignment.variable(), value);
     }
 
     private Result evalExpression(Expression expression) {
@@ -43,20 +43,24 @@ public class Interpreter {
             this.exception = exception;
         }
 
-        public static Result success(String result) {
-            return new Result(result, null);
+        public static Result success(String variable, float result) {
+            return new Result(variable + " = " + formatResult(result), null);
         }
 
         public static Result success(float result) {
-            return success(String.valueOf(result));
+            return new Result(formatResult(result), null);
         }
 
         public static Result failure(Exception exception) {
             return new Result(null, exception);
         }
 
+        private static String formatResult(float value) {
+            return Math.floor(value) == value ? String.valueOf((int) value) : String.valueOf(value);
+        }
+
         public String value() {
-            return Optional.ofNullable(value).isPresent() ? value : exception.getMessage();
+            return Objects.nonNull(value) ? value : exception.getMessage();
         }
     }
 }

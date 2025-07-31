@@ -5,6 +5,8 @@ import java.util.Map;
 import java.util.Optional;
 
 record Operation(String operator, List<Expression> operands) implements Expression {
+    private static final float TRUE_VALUE = 1.0f;
+    private static final float FALSE_VALUE = 0.0f;
 
     @Override
     public Optional<Assignment> assignment() {
@@ -49,6 +51,12 @@ record Operation(String operator, List<Expression> operands) implements Expressi
             case "-" -> leftOperand - rightOperand;
             case "*" -> leftOperand * rightOperand;
             case "/" -> performSafeDivision(leftOperand, rightOperand);
+            case "==" -> leftOperand == rightOperand ? TRUE_VALUE : FALSE_VALUE;
+            case "!=" -> leftOperand != rightOperand ? TRUE_VALUE : FALSE_VALUE;
+            case "<"  -> leftOperand <  rightOperand ? TRUE_VALUE : FALSE_VALUE;
+            case ">"  -> leftOperand >  rightOperand ? TRUE_VALUE : FALSE_VALUE;
+            case "<=" -> leftOperand <= rightOperand ? TRUE_VALUE : FALSE_VALUE;
+            case ">=" -> leftOperand >= rightOperand ? TRUE_VALUE : FALSE_VALUE;
             case "=" -> throw new ParserException("Assignment cannot be evaluated directly");
             default -> throw new ParserException(String.format("Unknown binary operator '%s'", operator));
         };

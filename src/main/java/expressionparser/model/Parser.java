@@ -78,6 +78,7 @@ public class Parser {
     private static PrecedenceRange operatorPrecedence(String operator) {
         return switch (operator) {
             case "=" -> new PrecedenceRange(0.2f, 0.1f);
+            case "==", "!=", "<", ">", "<=", ">=" -> new PrecedenceRange(0.5f, 0.6f);
             case "+", "-" -> new PrecedenceRange(1.0f, 1.1f);
             case "*", "/" -> new PrecedenceRange(2.0f, 2.1f);
             default -> throw new ParserException("Unknown operator: '" + operator + "'");

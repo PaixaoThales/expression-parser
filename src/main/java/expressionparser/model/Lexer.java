@@ -34,7 +34,7 @@ public class Lexer {
                 continue;
             }
 
-            position = consumeOperator(currentChar, position);
+            position = consumeOperator(input, position);
         }
     }
 
@@ -79,8 +79,17 @@ public class Lexer {
         return position;
     }
 
-    private int consumeOperator(char operatorChar, int position) {
-        tokens.add(new Token(Token.TokenType.OPERATOR, String.valueOf(operatorChar)));
+    private int consumeOperator(String input, int position) {
+        if (position + 1 < input.length()) {
+            String twoChars = input.substring(position, position + 2);
+            if (List.of("==", "!=", ">=", "<=").contains(twoChars)) {
+                tokens.add(new Token(Token.TokenType.OPERATOR, twoChars));
+                return position + 2;
+            }
+        }
+
+        char inputChar = input.charAt(position);
+        tokens.add(new Token(Token.TokenType.OPERATOR, String.valueOf(inputChar)));
         return position + 1;
     }
 
